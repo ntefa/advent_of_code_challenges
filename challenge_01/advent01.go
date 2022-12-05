@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -18,24 +19,23 @@ func main() {
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-	var s []string
+	var calories int
+	var maxCalories = 0
 	for scanner.Scan() {
-		s = append(s, scanner.Text())
-	}
-	var currentElement string
-	previousElement := ""
-	for i := 0; i < len(s); i++ {
-		if i != 0 {
-			previousElement = s[i-1]
+		text := scanner.Text()
+
+		snack, err := strconv.Atoi(text)
+		//If error is different from nil then I found an empty line
+		if err != nil {
+			if calories > maxCalories {
+				maxCalories = calories
+			}
+			calories = 0
 		}
-		currentElement = s[i]
-		if currentElement == " " && previousElement == " " {
-			fmt.Println(i)
-		}
+		fmt.Println(snack)
+		calories += snack
 	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println(maxCalories)
 
 }
