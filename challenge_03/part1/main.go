@@ -9,10 +9,7 @@ import (
 )
 
 func isEven(num int) bool {
-	if num%2 == 0 {
-		return true
-	}
-	return false
+	return num%2 == 0
 }
 func splitCompartments(rucksack string) (string, string, error) {
 	length := len(rucksack)
