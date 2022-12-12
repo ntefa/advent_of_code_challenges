@@ -62,6 +62,31 @@ func (stacks *Stacks) moveStacks(from, to, quantity int) {
 	}
 }
 
+func (stacks *Stacks) pushPile(to int, pile []string) {
+
+	stack := (*stacks)[to]
+	stack = append(stack, pile...)
+	(*stacks)[to] = stack
+}
+
+func reverse(ss []string) {
+	last := len(ss) - 1
+	for i := 0; i < len(ss)/2; i++ {
+		ss[i], ss[last-i] = ss[last-i], ss[i]
+	}
+}
+func (stacks *Stacks) moveStacksReverse(from, to, quantity int) {
+	var lastEle string
+	var pile []string
+	for i := 0; i < quantity; i++ {
+		lastEle = stacks.pop(from)
+		pile = append(pile, lastEle)
+	}
+	reverse(pile)
+	stacks.pushPile(to, pile)
+
+}
+
 func parseInput(input string) []string {
 	temp := strings.ReplaceAll(input, "move", "")
 	temp = strings.ReplaceAll(temp, "from", "")
@@ -82,7 +107,9 @@ func (stacks *Stacks) computeMsg() string {
 func main() {
 	var myStacks Stacks
 	myStacks.initData()
-
+	fmt.Println(myStacks)
+	myStacks.pushPile(1, []string{"1", "2", "3"})
+	fmt.Println(myStacks)
 	moves := strings.Split(s, "\n")
 	for _, move := range moves {
 		res := parseInput(move)
@@ -90,7 +117,7 @@ func main() {
 		from, _ := strconv.Atoi(strings.ReplaceAll(res[1], " ", ""))
 		to, _ := strconv.Atoi(strings.ReplaceAll(res[2], " ", ""))
 
-		myStacks.moveStacks(from-1, to-1, quantity)
+		myStacks.moveStacksReverse(from-1, to-1, quantity)
 	}
 	fmt.Println(myStacks.computeMsg())
 }
